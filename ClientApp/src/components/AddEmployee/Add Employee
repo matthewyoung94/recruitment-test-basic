@@ -1,0 +1,28 @@
+import React, {useState} from "react";
+
+
+const AddEmployee = (props) => {
+  
+  const [newName, setNewName] = useState()
+  const [newValue, setNewValue] = useState();
+  
+  const onSubmit = () => {
+    props.onCreateNew(newName, newValue)
+    setNewName('')
+    setNewValue('')
+  }
+
+  return (
+    <div>
+      <p>New Employee Name:</p>
+      <input onChange={(e) => setNewName(e.target.value)} value={newName}/>
+      <p>New Employee Value:</p>
+      <input onChange={(e) => setNewValue(e.target.value)} value={newValue} />
+      <button onClick={() => onSubmit(newName, newValue)}>
+        Save New Employee
+      </button>
+    </div>
+  );
+};
+
+export default AddEmployee; 
