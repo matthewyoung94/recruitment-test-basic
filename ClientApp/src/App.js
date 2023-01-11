@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import ListItem from './components/ListItem';
+import AddEmployee from './components/AddEmployee/AddEmployee';
 
-export default function () {
+
+export default function() {
+
+    const [employees, setEmployees] = useState();
+    const [employeeSelected, setEmployeeSelected] = useState();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const staff = await getEmployees();
+            setEmployees(staff);
+        };
+        fetchData().catch(console.error);
+    },[]);
 
     async function getEmployees() {
         return fetch("/employees").then(response => response.json());
@@ -22,7 +36,45 @@ export default function () {
         });
     }
 
-    return (
-        <div>Complete your app here</div>
-    );
-}
+    const onSelectEmployee = (employee) => {
+        if (employeeSelected === employee) {
+            setEmployeeSelected();
+        } else {
+            setEmployeeSelected(employee);
+        }
+    }
+
+    const onEditSubmit = async (value) => {
+        const response = await updateEmployee(employeeSelected.name, value);
+        onUpdateEmployees()
+    };
+
+    const onCreateNew = async (name, value) => {
+        const response = await createEmployee(name, value);
+        onUpdateEmployees()
+    }
+
+    const onUpdateEmployees = async () => {
+        const peeps = await getEmployees();
+        setEmployees(peeps);
+      }
+ 
+      return (
+        <section>
+          <AddEmployee onCreateNew={onCreateNew}/>
+          {employees && <p>Employee Count: {employees.length}</p>}
+          {employees &&
+            employees.map((employee, index) => {
+              return (
+                <ListItem
+                  employee={employee}
+                  employeeSelected={employeeSelected}
+                  onSelectEmployee={onSelectEmployee}
+                  key={index}
+                  onEditSubmit={onEditSubmit}
+                />
+              );
+            })}
+        </section>
+      );
+    }
