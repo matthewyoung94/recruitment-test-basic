@@ -1,0 +1,25 @@
+import React, { useState } from "react";
+import "./ListItem.css";
+
+const ListItem = (props) => {
+  const [editedText, setEditedText] = useState();
+
+  return (
+    <div className="ListItemCard">
+      <p>Name: {props.employee.name}</p>
+      <p>Value: {props.employee.value}</p>
+      <button
+        onClick={() => props.onSelectEmployee(props.employee)}>
+        Edit Value
+      </button>
+      {props.employeeSelected === props.employee && (
+        <>
+          <input onChange={(e) => setEditedText(e.target.value)} />
+          <button onClick={() => props.onEditSubmit(editedText)}>Save</button>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default ListItem;
